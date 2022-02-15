@@ -161,7 +161,7 @@ contract Staking is IStaking, Ownable {
         val.validateSignature(votingPower, signed);
     }
 
-    function withdrawRewards(address payable to, uint256 amount) external onlyValidator {
+    function withdrawRewards(address payable to, uint256 amount) external onlyValidator nonReentrant {
         to.transfer(amount);
     }
 
