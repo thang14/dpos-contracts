@@ -36,6 +36,14 @@ contract Staking is IStaking, Ownable {
         _;
     }
 
+    uint256 private unlocked = 1;
+    modifier lock() {
+        require(unlocked == 1, 'Staking: LOCKED');
+        unlocked = 0;
+        _;
+        unlocked = 1;
+    }
+
     constructor() public {
         params = address(new Params());
         treasury = address(new Treasury(address(this)));
@@ -161,7 +169,7 @@ contract Staking is IStaking, Ownable {
         val.validateSignature(votingPower, signed);
     }
 
-    function withdrawRewards(address payable to, uint256 amount) external onlyValidator nonReentrant {
+    function withdrawRewards(address payable to, uint256 amount) external onlyValidator lock {
         to.transfer(amount);
     }
 
